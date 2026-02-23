@@ -1,4 +1,4 @@
-﻿using Common.Enums;
+﻿using Contracts.Enums;
 using Contracts.Responses.Customer;
 using Contracts.Responses.Seller;
 
