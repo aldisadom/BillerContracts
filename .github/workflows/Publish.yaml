@@ -1,0 +1,35 @@
+name: Publish
+
+on:
+  workflow_dispatch:
+    inputs:
+      package_version:
+        description: 'Package version to publish (e.g. 1.2.3)'
+        required: true
+        default: '1.0.0'
+
+env:
+  DOTNET_VERSION: 8.0.x
+
+jobs:
+  publish:
+    name: Publish to NuGet.org
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-dotnet@v2
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+
+      - name: Pack projects with specified version
+        run: dotnet pack -c Release -o ./artifacts /p:PackageVersion=${{ github.event.inputs.package_version }}
+
+      - name: List artifacts
+        run: ls -la ./artifacts || true
+
+      - name: Push packages to NuGet.org
+        env:
+          NUGET_API_KEY: ${{ vars.NUGETAPIKEY }}
+        run: |
+          dotnet nuget push "./artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
