@@ -1,6 +1,7 @@
-﻿namespace Common.Enums;
+﻿namespace Contracts.Enums;
 
 public enum Language
 {
     LT,
+    EN
 }
