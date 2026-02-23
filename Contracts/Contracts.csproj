@@ -5,15 +5,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <PackageId>MyLibrary</PackageId>
-    <Authors>Aldis</Authors>
+    <PackageId>BillerContracts</PackageId>
+    <Version>1.0.1</Version>
+    <Authors>Aldis</Authors>    
     <Description>This is contracts for biller</Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <RepositoryUrl>https://github.com/aldisadom/BillerContracts</RepositoryUrl>
   </PropertyGroup>
-
-  <ItemGroup>
-    <ProjectReference Include="..\Common\Common.csproj" />
-  </ItemGroup>
 
 </Project>
