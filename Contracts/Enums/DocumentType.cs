@@ -1,4 +1,4 @@
-﻿namespace Common.Enums;
+﻿namespace Contracts.Enums;
 
 public enum DocumentType
 {
