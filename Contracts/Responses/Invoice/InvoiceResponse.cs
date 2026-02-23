@@ -1,8 +1,8 @@
-﻿using Contracts.Enums;
-using Contracts.Responses.Customer;
-using Contracts.Responses.Seller;
+﻿using BillerContracts.Enums;
+using BillerContracts.Responses.Customer;
+using BillerContracts.Responses.Seller;
 
-namespace Contracts.Responses.Invoice;
+namespace BillerContracts.Responses.Invoice;
 
 public class InvoiceResponse
 {

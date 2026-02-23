@@ -1,7 +1,7 @@
-﻿using Contracts.Requests.Customer;
-using Contracts.Requests.Seller;
+﻿using BillerContracts.Requests.Customer;
+using BillerContracts.Requests.Seller;
 
-namespace Contracts.Requests.Invoice;
+namespace BillerContracts.Requests.Invoice;
 
 public class InvoiceUpdateRequest
 {

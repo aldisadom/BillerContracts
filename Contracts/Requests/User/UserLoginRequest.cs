@@ -1,4 +1,4 @@
-﻿namespace Contracts.Requests.User;
+﻿namespace BillerContracts.Requests.User;
 
 public class UserLoginRequest
 {

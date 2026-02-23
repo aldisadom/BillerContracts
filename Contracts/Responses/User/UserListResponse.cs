@@ -1,4 +1,4 @@
-﻿namespace Contracts.Responses.User;
+﻿namespace BillerContracts.Responses.User;
 
 public class UserListResponse
 {

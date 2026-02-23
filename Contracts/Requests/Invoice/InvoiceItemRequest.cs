@@ -1,4 +1,4 @@
-﻿namespace Contracts.Requests.Invoice;
+﻿namespace BillerContracts.Requests.Invoice;
 
 public class InvoiceItemRequest
 {

@@ -1,4 +1,4 @@
-﻿namespace Contracts.Responses.Invoice;
+﻿namespace BillerContracts.Responses.Invoice;
 
 public class InvoiceItemResponse
 {
