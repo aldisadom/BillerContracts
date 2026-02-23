@@ -1,4 +1,4 @@
-﻿namespace Contracts.Responses.Customer;
+﻿namespace BillerContracts.Responses.Customer;
 
 public record CustomerResponse
 {

@@ -1,4 +1,4 @@
-﻿namespace Contracts.Responses;
+﻿namespace BillerContracts.Responses;
 
 public record ErrorResponse
 {

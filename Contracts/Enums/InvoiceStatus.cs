@@ -1,4 +1,4 @@
-﻿namespace Contracts.Enums;
+﻿namespace BillerContracts.Enums;
 
 public enum InvoiceStatus
 {

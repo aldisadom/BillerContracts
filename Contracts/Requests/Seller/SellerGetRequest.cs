@@ -1,4 +1,4 @@
-﻿namespace Contracts.Requests.Seller;
+﻿namespace BillerContracts.Requests.Seller;
 
 public record SellerGetRequest
 {

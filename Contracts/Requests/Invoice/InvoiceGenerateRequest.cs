@@ -1,6 +1,6 @@
-﻿using Contracts.Enums;
+﻿using BillerContracts.Enums;
 
-namespace Contracts.Requests.Invoice;
+namespace BillerContracts.Requests.Invoice;
 
 public record InvoiceGenerateRequest
 {

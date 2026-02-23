@@ -1,4 +1,4 @@
-﻿namespace Contracts.Responses.Seller;
+﻿namespace BillerContracts.Responses.Seller;
 
 public record SellerListResponse
 {

@@ -1,4 +1,4 @@
-﻿namespace Contracts.Requests.Customer;
+﻿namespace BillerContracts.Requests.Customer;
 
 public record CustomerUpdateRequest
 {
