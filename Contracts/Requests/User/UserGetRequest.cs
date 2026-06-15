@@ -1,10 +1,9 @@
 ﻿using BillerContracts.Enums;
 
-namespace BillerContracts.Requests.Customer;
+namespace BillerContracts.Requests.Seller;
 
-public record CustomerGetRequest
+public record UserGetRequest
 {
-    public Guid? SellerId { get; set; }
     public int Page { get; set; } = 1;
     public PageSize PageSize { get; set; } = PageSize.p25;
 }
