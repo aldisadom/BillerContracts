@@ -1,4 +1,5 @@
-﻿using BillerContracts.Clients.Interfaces;
+﻿using BillerContracts.Clients.Clients;
+using BillerContracts.Clients.Interfaces;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,7 +11,7 @@ public static class DependencyInjection
     /// Registers the Biller API clients. Configure <see cref="ClientsOptions"/> separately,
     /// or use the overload that binds it from configuration.
     /// </summary>
-    public static IServiceCollection AddBillerClients(this IServiceCollection services)
+    private static IServiceCollection AddBillerClients(this IServiceCollection services)
     {
         services.AddHttpClient();
 

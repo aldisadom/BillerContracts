@@ -12,13 +12,13 @@ public class BaseHttpClient
 
     public BaseHttpClient(IHttpClientFactory httpClientFactory, string urlBase)
     {
-        _urlBase = urlBase;
+        _urlBase = urlBase.TrimEnd('/');
         _httpClientFactory = httpClientFactory;
     }
 
     public Uri GenerateUrl(string endpoint, Dictionary<string, string>? queryParameters = null)
     {
-        StringBuilder urlBuilder = new($"{_urlBase}/{endpoint}");
+        StringBuilder urlBuilder = new(string.IsNullOrEmpty(endpoint) ? _urlBase : $"{_urlBase}/{endpoint}");
 
         if (queryParameters?.Count > 0)
         {
@@ -93,14 +93,14 @@ public class BaseHttpClient
         await ReadBodyAsync(response);
     }
 
-    public async Task<FileDownloadResult> PostFileDownloadAsync<T>(string endpoint, T data, Dictionary<string, string>? headerParameters = null)
+    public async Task<FileDownloadResponse> PostFileDownloadAsync<T>(string endpoint, T data, Dictionary<string, string>? headerParameters = null)
     {
         HttpResponseMessage response = await SendAsync(HttpMethod.Post, endpoint, GenerateQueryFromData(data), headerParameters);
 
         if (!response.IsSuccessStatusCode)
             await ReadBodyAsync(response);
 
-        var result = new FileDownloadResult
+        var result = new FileDownloadResponse
         {
             Content = await response.Content.ReadAsStreamAsync(),
             ContentType = response.Content.Headers.ContentType?.ToString()

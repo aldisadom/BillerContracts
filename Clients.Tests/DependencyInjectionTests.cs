@@ -1,4 +1,5 @@
 ﻿using BillerContracts.Clients;
+using BillerContracts.Clients.Clients;
 using BillerContracts.Clients.Interfaces;
 using FluentAssertions;
 using FluentAssertions.Execution;
@@ -24,7 +25,14 @@ public class DependencyInjectionTests
     {
         // Arrange
         var configuration = new ConfigurationBuilder()
-            .AddInMemoryCollection(new Dictionary<string, string?> { ["BillioUrl"] = "https://api.test" })
+            .AddInMemoryCollection(new Dictionary<string, string?>
+            {
+                ["UserUrl"] = "https://api.test/users",
+                ["CustomerUrl"] = "https://api.test/customers",
+                ["SellerUrl"] = "https://api.test/sellers",
+                ["ItemUrl"] = "https://api.test/items",
+                ["InvoiceUrl"] = "https://api.test/invoices",
+            })
             .Build();
         var services = new ServiceCollection();
 
@@ -37,7 +45,14 @@ public class DependencyInjectionTests
         using var _ = new AssertionScope();
 
         result.Should().BeSameAs(services);
-        scope.ServiceProvider.GetRequiredService<IOptions<ClientsOptions>>().Value.BillioUrl.Should().Be("https://api.test");
+        scope.ServiceProvider.GetRequiredService<IOptions<ClientsOptions>>().Value.Should().BeEquivalentTo(new ClientsOptions
+        {
+            UserUrl = "https://api.test/users",
+            CustomerUrl = "https://api.test/customers",
+            SellerUrl = "https://api.test/sellers",
+            ItemUrl = "https://api.test/items",
+            InvoiceUrl = "https://api.test/invoices",
+        });
         scope.ServiceProvider.GetService<IHttpClientFactory>().Should().NotBeNull();
 
         foreach (var (serviceType, implementationType) in _expectedClients)

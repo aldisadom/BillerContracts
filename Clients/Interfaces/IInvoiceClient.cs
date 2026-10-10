@@ -13,5 +13,5 @@ public interface IInvoiceClient
     Task<InvoiceResponse> Get(Guid id);
     Task Update(InvoiceUpdateRequest invoice);
     Task UpdateStatus(InvoiceUpdateStatusRequest invoice);
-    Task<FileDownloadResult> GeneratePDF(InvoiceGenerateRequest invoice);
+    Task<FileDownloadResponse> GeneratePDF(InvoiceGenerateRequest invoice);
 }

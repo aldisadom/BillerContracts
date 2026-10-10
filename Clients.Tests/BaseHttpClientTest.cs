@@ -1,5 +1,6 @@
-﻿using BillerContracts.Clients;
+﻿﻿using BillerContracts.Clients;
 using BillerContracts.Enums;
+using BillerContracts.Responses;
 using FluentAssertions;
 using Newtonsoft.Json;
 using System.Net;
@@ -50,6 +51,34 @@ public class BaseHttpClientTest
 
         //Assert
         result.Should().Be(new Uri($"{_urlBase}/{_endpoint}"));
+    }
+
+    [Fact]
+    public void GenerateUrl_GivenEmptyEndpoint_ReturnsBaseWithoutTrailingSlash()
+    {
+        //Arrange
+        var client = new BaseHttpClient(_handler.CreateFactory(), "https://api.test/v1/items");
+
+        //Act
+        Uri result = client.GenerateUrl(string.Empty, new Dictionary<string, string> { ["page"] = "2" });
+
+        //Assert
+        result.AbsoluteUri.Should().Be("https://api.test/v1/items?page=2");
+    }
+
+    [Fact]
+    public void GenerateUrl_GivenBaseWithTrailingSlash_DoesNotDoubleSlash()
+    {
+        //Arrange
+        var client = new BaseHttpClient(_handler.CreateFactory(), "https://api.test/v1/items/");
+
+        //Act
+        Uri resource = client.GenerateUrl(string.Empty);
+        Uri child = client.GenerateUrl("42");
+
+        //Assert
+        resource.AbsoluteUri.Should().Be("https://api.test/v1/items");
+        child.AbsoluteUri.Should().Be("https://api.test/v1/items/42");
     }
 
     [Fact]
@@ -313,7 +342,7 @@ public class BaseHttpClientTest
         var data = new QueryData { Page = 1 };
 
         //Act
-        FileDownloadResult result = await _client.PostFileDownloadAsync(_endpoint, data);
+        FileDownloadResponse result = await _client.PostFileDownloadAsync(_endpoint, data);
 
         //Assert
         result.FileName.Should().Be("invoice.pdf");
@@ -331,7 +360,7 @@ public class BaseHttpClientTest
         _handler.ResponseBody = "%PDF";
 
         //Act
-        FileDownloadResult result = await _client.PostFileDownloadAsync(_endpoint, new QueryData());
+        FileDownloadResponse result = await _client.PostFileDownloadAsync(_endpoint, new QueryData());
 
         //Assert
         result.FileName.Should().BeNull();

@@ -1,6 +1,6 @@
-﻿namespace BillerContracts.Clients;
+﻿namespace BillerContracts.Responses;
 
-public class FileDownloadResult
+public record FileDownloadResponse
 {
     public Stream Content { get; set; } = default!;
     public string? FileName { get; set; }
