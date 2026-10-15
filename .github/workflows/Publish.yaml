@@ -7,14 +7,26 @@ on:
         description: 'Package version to publish (e.g. 1.2.3)'
         required: true
         default: '1.0.0'
+      prerelease:
+        description: 'Publish as prerelease (appends -preview.<run number>, e.g. 1.2.3-preview.42)'
+        type: boolean
+        default: false
 
 env:
   DOTNET_VERSION: 8.0.x
 
 jobs:
+  ci:
+    name: CI
+    uses: ./.github/workflows/CI.yaml
+
   publish:
     name: Publish to NuGet.org
+    needs: ci
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write  # required for NuGet Trusted Publishing (OIDC)
     steps:
       - uses: actions/checkout@v3
 
@@ -22,14 +34,40 @@ jobs:
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: Pack projects with specified version
-        run: dotnet pack -c Release -o ./artifacts /p:PackageVersion=${{ github.event.inputs.package_version }}
+      - name: Resolve package version
+        id: version
+        env:
+          BASE_VERSION: ${{ github.event.inputs.package_version }}
+          PRERELEASE: ${{ github.event.inputs.prerelease }}
+        run: |
+          if ! [[ "$BASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::package_version must be MAJOR.MINOR.PATCH, got '$BASE_VERSION'"
+            exit 1
+          fi
+
+          VERSION="$BASE_VERSION"
+          if [ "$PRERELEASE" = "true" ]; then
+            VERSION="$BASE_VERSION-preview.${{ github.run_number }}"
+          fi
+
+          echo "version=$VERSION" >> "$GITHUB_OUTPUT"
+          echo "Publishing version **$VERSION** from \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Pack projects with resolved version
+        run: dotnet pack -c Release -o ./artifacts /p:PackageVersion=${{ steps.version.outputs.version }}
 
       - name: List artifacts
         run: ls -la ./artifacts || true
 
+      # Exchange the GitHub OIDC token for a short-lived (1h) NuGet API key
+      - name: NuGet login
+        uses: NuGet/login@v1
+        id: login
+        with:
+          user: ${{ secrets.NUGET_USER }}
+
       - name: Push packages to NuGet.org
         env:
-          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+          NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
           dotnet nuget push "./artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
