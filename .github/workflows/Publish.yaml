@@ -1,16 +1,13 @@
 name: Publish
+run-name: Publish ${{ inputs.package_version }}${{ github.ref_name != 'master' && format('-preview.{0}', github.run_number) || '' }}
 
 on:
   workflow_dispatch:
     inputs:
       package_version:
-        description: 'Package version to publish (e.g. 1.2.3)'
+        description: 'Package version to publish (e.g. 1.2.3). Runs from branches other than master publish 1.2.3-preview.<run number>'
         required: true
         default: '1.0.0'
-      prerelease:
-        description: 'Publish as prerelease (appends -preview.<run number>, e.g. 1.2.3-preview.42)'
-        type: boolean
-        default: false
 
 env:
   DOTNET_VERSION: 8.0.x
@@ -38,7 +35,6 @@ jobs:
         id: version
         env:
           BASE_VERSION: ${{ github.event.inputs.package_version }}
-          PRERELEASE: ${{ github.event.inputs.prerelease }}
         run: |
           if ! [[ "$BASE_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "::error::package_version must be MAJOR.MINOR.PATCH, got '$BASE_VERSION'"
@@ -46,12 +42,12 @@ jobs:
           fi
 
           VERSION="$BASE_VERSION"
-          if [ "$PRERELEASE" = "true" ]; then
+          if [ "$GITHUB_REF_NAME" != "master" ]; then
             VERSION="$BASE_VERSION-preview.${{ github.run_number }}"
           fi
 
           echo "version=$VERSION" >> "$GITHUB_OUTPUT"
-          echo "Publishing version **$VERSION** from \`${{ github.ref_name }}\`" >> "$GITHUB_STEP_SUMMARY"
+          echo "Publishing version **$VERSION** from \`$GITHUB_REF_NAME\`" >> "$GITHUB_STEP_SUMMARY"
 
       - name: Pack projects with resolved version
         run: dotnet pack -c Release -o ./artifacts /p:PackageVersion=${{ steps.version.outputs.version }}
