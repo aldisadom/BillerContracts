@@ -1,6 +1,6 @@
 ﻿using BillerContracts.Enums;
 
-namespace BillerContracts.Requests.Seller;
+namespace BillerContracts.Requests.User;
 
 public record UserGetRequest
 {
