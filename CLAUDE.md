@@ -25,6 +25,8 @@ A change reaches them only after a publish and a version bump in each repo.
 - A new Biller endpoint needs a method on its client and interface, and a client test.
 - Renaming or removing a property, enum member or namespace breaks consumers: bump the major version.
 - No AutoMapper or any other mapping library, in any Biller repo. Map with hand-written extension methods.
+- Plans for work only in this repo go in `docs/plans/BIL-<n>-<slug>.md` here. Plans that change
+  several repos live in Biller's `docs/plans/`.
 - Before reading, comparing or using another Biller repo, put it on the branch with this branch's
   name, else on up-to-date master:
   `bash ../Biller/.claude/skills/_sync-repos/scripts/sync-repos.sh --branch "$(git branch --show-current)" Biller BillerFrontEnd BillioIntegrationTest`
