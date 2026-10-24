@@ -1,4 +1,5 @@
-﻿﻿using BillerContracts.Clients;
+﻿﻿using BillerContracts;
+using BillerContracts.Clients;
 using BillerContracts.Enums;
 using BillerContracts.Responses;
 using FluentAssertions;
@@ -239,8 +240,25 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.GetAsync<TestData>(_endpoint);
 
         //Assert
-        await act.Should().ThrowAsync<ClientAPIException>()
-            .WithMessage($"Failed to get data from client {_urlBase}, error code: BadRequest, with message: bad input");
+        var exception = await act.Should().ThrowAsync<ClientAPIException>()
+            .WithMessage($"Failed to get data from client {_urlBase}, error code: BadRequest, with message: bad input, extended message: details");
+        exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("bad input", "details", HttpStatusCode.BadRequest));
+    }
+
+    [Fact]
+    public async Task GetAsync_GivenNotFoundWithNonJsonBody_ThrowsWithStatusCodeOnly()
+    {
+        //Arrange
+        _handler.StatusCode = HttpStatusCode.NotFound;
+        _handler.ResponseBody = "Not Found";
+
+        //Act
+        Func<Task> act = () => _client.GetAsync<TestData>(_endpoint);
+
+        //Assert
+        var exception = await act.Should().ThrowAsync<ClientAPIException>()
+            .WithMessage($"Failed to get data from client {_urlBase}, error code: NotFound, with body: Not Found");
+        exception.Which.Error.Should().BeEquivalentTo(new ErrorModel(string.Empty, string.Empty, HttpStatusCode.NotFound));
     }
 
     [Fact]
@@ -254,8 +272,9 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.GetAsync<TestData>(_endpoint);
 
         //Assert
-        await act.Should().ThrowAsync<ClientAPIException>()
+        var exception = await act.Should().ThrowAsync<ClientAPIException>()
             .WithMessage($"Failed to get data from client {_urlBase}, error code: InternalServerError, with body: ");
+        exception.Which.Error.Should().BeEquivalentTo(new ErrorModel(string.Empty, string.Empty, HttpStatusCode.InternalServerError));
     }
 
     [Fact]
@@ -284,7 +303,8 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.PostAsync<TestData, TestData>(_endpoint, new TestData(1, "x"));
 
         //Assert
-        await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*Conflict, with message: exists");
+        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*Conflict, with message: exists");
+        exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("exists", string.Empty, HttpStatusCode.Conflict));
     }
 
     [Fact]
@@ -325,8 +345,9 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.GetAsync<TestData>(_endpoint);
 
         //Assert
-        await act.Should().ThrowAsync<ClientAPIException>()
+        var exception = await act.Should().ThrowAsync<ClientAPIException>()
             .WithMessage($"Failed to deserialize data from client {_urlBase}, with body: null");
+        exception.Which.Error.Should().BeNull();
     }
 
     [Fact]

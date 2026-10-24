@@ -159,6 +159,7 @@ public class BaseHttpClient
     private void DecodeResponseError(string body, HttpResponseMessage response)
     {
         string errorMessage = $"Failed to get data from client {_urlBase}, error code: {response.StatusCode}";
+        ErrorModel errorModel = new() { StatusCode = response.StatusCode };
 
         try
         {
@@ -167,14 +168,21 @@ public class BaseHttpClient
             if (error is null)
                 errorMessage += $", with body: {body}";
             else
-                errorMessage += $", with message: {error.Message}";
+            {
+                errorModel.Message = error.Message ?? string.Empty;
+                errorModel.ExtendedMessage = error.ExtendedMessage ?? string.Empty;
+
+                errorMessage += $", with message: {errorModel.Message}";
+                if (!string.IsNullOrEmpty(errorModel.ExtendedMessage))
+                    errorMessage += $", extended message: {errorModel.ExtendedMessage}";
+            }
         }
         catch (Exception)
         {
             errorMessage += $", with body: {body}";
         }
 
-        throw new ClientAPIException(errorMessage);
+        throw new ClientAPIException(errorMessage, errorModel);
     }
 
     private T DecodeResponse<T>(string body)
