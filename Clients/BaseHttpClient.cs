@@ -165,7 +165,8 @@ public class BaseHttpClient
         {
             ErrorResponse? error = JsonConvert.DeserializeObject<ErrorResponse>(body);
 
-            if (error is null)
+            // Other JSON (ASP.NET ProblemDetails, a proxy's {}) also deserializes, with both fields empty
+            if (error is null || (string.IsNullOrEmpty(error.Message) && string.IsNullOrEmpty(error.ExtendedMessage)))
                 errorMessage += $", with body: {body}";
             else
             {
