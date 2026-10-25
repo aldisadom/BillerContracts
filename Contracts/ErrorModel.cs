@@ -26,11 +26,10 @@ public class ErrorModel
         string errorMessage = $"Error status code: {StatusCode}";
 
         if (!string.IsNullOrEmpty(Message))
-        {
-            errorMessage += $", message: " + Message;
-            if (!string.IsNullOrEmpty(Message))
-                errorMessage += $", extended message: " + ExtendedMessage;
-        }
+            errorMessage += $", message: {Message}";
+        if (!string.IsNullOrEmpty(ExtendedMessage))
+            errorMessage += $", extended message: {ExtendedMessage}";
+
         return errorMessage;
     }
 }
