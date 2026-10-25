@@ -158,23 +158,31 @@ public class BaseHttpClient
 
     private void DecodeResponseError(string body, HttpResponseMessage response)
     {
-        string errorMessage = $"Failed to get data from client {_urlBase}, error code: {response.StatusCode}";
+        ErrorModel errorModel = new() { StatusCode = response.StatusCode };
+        bool isErrorResponse = false;
 
         try
         {
             ErrorResponse? error = JsonConvert.DeserializeObject<ErrorResponse>(body);
 
-            if (error is null)
-                errorMessage += $", with body: {body}";
-            else
-                errorMessage += $", with message: {error.Message}";
+            // Other JSON (ASP.NET ProblemDetails, a proxy's {}) also deserializes, with both fields empty
+            if (error is not null && (!string.IsNullOrEmpty(error.Message) || !string.IsNullOrEmpty(error.ExtendedMessage)))
+            {
+                errorModel.Message = error.Message ?? string.Empty;
+                errorModel.ExtendedMessage = error.ExtendedMessage ?? string.Empty;
+                isErrorResponse = true;
+            }
         }
         catch (Exception)
         {
-            errorMessage += $", with body: {body}";
+            // Not JSON: the body goes into the text below
         }
 
-        throw new ClientAPIException(errorMessage);
+        string errorMessage = $"Failed to get data from client {_urlBase}, {errorModel}";
+        if (!isErrorResponse)
+            errorMessage += $", with body: {body}";
+
+        throw new ClientAPIException(errorMessage, errorModel);
     }
 
     private T DecodeResponse<T>(string body)
