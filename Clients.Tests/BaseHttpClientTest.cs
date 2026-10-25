@@ -241,7 +241,7 @@ public class BaseHttpClientTest
 
         //Assert
         var exception = await act.Should().ThrowAsync<ClientAPIException>()
-            .WithMessage($"Failed to get data from client {_urlBase}, error code: BadRequest, with message: bad input, extended message: details");
+            .WithMessage($"Failed to get data from client {_urlBase}, Error status code: BadRequest, message: bad input, extended message: details");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("bad input", "details", HttpStatusCode.BadRequest));
     }
 
@@ -257,7 +257,7 @@ public class BaseHttpClientTest
 
         //Assert
         var exception = await act.Should().ThrowAsync<ClientAPIException>()
-            .WithMessage($"Failed to get data from client {_urlBase}, error code: NotFound, with body: Not Found");
+            .WithMessage($"Failed to get data from client {_urlBase}, Error status code: NotFound, with body: Not Found");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel(string.Empty, string.Empty, HttpStatusCode.NotFound));
     }
 
@@ -273,7 +273,7 @@ public class BaseHttpClientTest
 
         //Assert
         var exception = await act.Should().ThrowAsync<ClientAPIException>()
-            .WithMessage($"Failed to get data from client {_urlBase}, error code: InternalServerError, with body: ");
+            .WithMessage($"Failed to get data from client {_urlBase}, Error status code: InternalServerError, with body: ");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel(string.Empty, string.Empty, HttpStatusCode.InternalServerError));
     }
 
@@ -289,7 +289,7 @@ public class BaseHttpClientTest
 
         //Assert
         var exception = await act.Should().ThrowAsync<ClientAPIException>()
-            .WithMessage($"Failed to get data from client {_urlBase}, error code: BadGateway, with body: <html>oops</html>");
+            .WithMessage($"Failed to get data from client {_urlBase}, Error status code: BadGateway, with body: <html>oops</html>");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel(string.Empty, string.Empty, HttpStatusCode.BadGateway));
     }
 
@@ -307,7 +307,7 @@ public class BaseHttpClientTest
 
         //Assert
         var exception = await act.Should().ThrowAsync<ClientAPIException>()
-            .WithMessage($"Failed to get data from client {_urlBase}, error code: BadRequest, with body: {body}");
+            .WithMessage($"Failed to get data from client {_urlBase}, Error status code: BadRequest, with body: {body}");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel(string.Empty, string.Empty, HttpStatusCode.BadRequest));
     }
 
@@ -322,7 +322,7 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.PostAsync<TestData, TestData>(_endpoint, new TestData(1, "x"));
 
         //Assert
-        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*Conflict, with message: exists");
+        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*Conflict, message: exists");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("exists", string.Empty, HttpStatusCode.Conflict));
     }
 
@@ -337,7 +337,7 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.PutAsync(_endpoint, new TestData(1, "x"));
 
         //Assert
-        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*NotFound, with message: missing");
+        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*NotFound, message: missing");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("missing", string.Empty, HttpStatusCode.NotFound));
     }
 
@@ -352,7 +352,7 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.DeleteAsync($"{_endpoint}/1");
 
         //Assert
-        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*NotFound, with message: missing");
+        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*NotFound, message: missing");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("missing", string.Empty, HttpStatusCode.NotFound));
     }
 
@@ -420,7 +420,7 @@ public class BaseHttpClientTest
         Func<Task> act = () => _client.PostFileDownloadAsync(_endpoint, new QueryData());
 
         //Assert
-        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*NotFound, with message: no invoice");
+        var exception = await act.Should().ThrowAsync<ClientAPIException>().WithMessage("*NotFound, message: no invoice");
         exception.Which.Error.Should().BeEquivalentTo(new ErrorModel("no invoice", string.Empty, HttpStatusCode.NotFound));
     }
 }
