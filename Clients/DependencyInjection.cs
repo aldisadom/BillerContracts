@@ -20,6 +20,7 @@ public static class DependencyInjection
         services.AddScoped<ICustomerClient, CustomerClient>();
         services.AddScoped<ISellerClient, SellerClient>();
         services.AddScoped<IInvoiceClient, InvoiceClient>();
+        services.AddScoped<ISeriesClient, SeriesClient>();
 
         return services;
     }
