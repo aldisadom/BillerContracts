@@ -6,7 +6,6 @@ namespace BillerContracts.Requests.Invoice;
 public class InvoiceUpdateRequest
 {
     public Guid Id { get; set; }
-    public int InvoiceNumber { get; set; }
     public Guid SellerId { get; set; }
     public Guid CustomerId { get; set; }
     public List<InvoiceItemRequest> Items { get; set; } = [];

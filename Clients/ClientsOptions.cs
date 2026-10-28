@@ -10,4 +10,5 @@ public class ClientsOptions
     public string SellerUrl { get; set; } = string.Empty;
     public string ItemUrl { get; set; } = string.Empty;
     public string InvoiceUrl { get; set; } = string.Empty;
+    public string SeriesUrl { get; set; } = string.Empty;
 }
