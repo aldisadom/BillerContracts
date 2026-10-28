@@ -18,7 +18,6 @@ public class DependencyInjectionTests
         [typeof(ISellerClient)] = typeof(SellerClient),
         [typeof(IItemClient)] = typeof(ItemClient),
         [typeof(IInvoiceClient)] = typeof(InvoiceClient),
-        [typeof(ISeriesClient)] = typeof(SeriesClient),
     };
 
     [Fact]
@@ -33,7 +32,6 @@ public class DependencyInjectionTests
                 ["SellerUrl"] = "https://api.test/sellers",
                 ["ItemUrl"] = "https://api.test/items",
                 ["InvoiceUrl"] = "https://api.test/invoices",
-                ["SeriesUrl"] = "https://api.test/series",
             })
             .Build();
         var services = new ServiceCollection();
@@ -54,7 +52,6 @@ public class DependencyInjectionTests
             SellerUrl = "https://api.test/sellers",
             ItemUrl = "https://api.test/items",
             InvoiceUrl = "https://api.test/invoices",
-            SeriesUrl = "https://api.test/series",
         });
         scope.ServiceProvider.GetService<IHttpClientFactory>().Should().NotBeNull();
 

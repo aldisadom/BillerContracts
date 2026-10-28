@@ -8,8 +8,6 @@ public class InvoiceResponse
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
-    public Guid SeriesId { get; set; }
-    public string SeriesName { get; set; } = string.Empty;
     public int InvoiceNumber { get; set; }
     public DateOnly CreatedDate { get; set; }
     public DateOnly DueDate { get; set; }

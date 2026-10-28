@@ -72,7 +72,7 @@ public class InvoiceClientTest
     public async Task Update_GivenRequest_PutsJson()
     {
         //Act
-        await _client.Update(new InvoiceUpdateRequest { Seller = new(), Customer = new() });
+        await _client.Update(new InvoiceUpdateRequest { SellerId = new(), CustomerId = new() });
 
         //Assert
         _handler.ShouldHaveSent(HttpMethod.Put, InvoiceUrl, "{}");
