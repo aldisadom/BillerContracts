@@ -17,7 +17,6 @@ public static class ClientTestHelper
     public const string ItemResource = "https://items.test/api/items";
     public const string ItemUrl = ItemResource + "/";
     public const string InvoiceUrl = "https://invoices.test/api/invoices";
-    public const string SeriesUrl = "https://series.test/api/series";
 
     public static readonly Guid Id = Guid.Parse("11111111-2222-3333-4444-555555555555");
 
@@ -28,7 +27,6 @@ public static class ClientTestHelper
         SellerUrl = SellerUrl,
         ItemUrl = ItemUrl,
         InvoiceUrl = InvoiceUrl,
-        SeriesUrl = SeriesUrl,
     };
 
     public static IOptions<ClientsOptions> Options(Action<ClientsOptions>? change = null)
