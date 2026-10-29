@@ -1,6 +1,4 @@
 ﻿using BillerContracts.Enums;
-using BillerContracts.Responses.Customer;
-using BillerContracts.Responses.Seller;
 
 namespace BillerContracts.Responses.Invoice;
 
@@ -13,8 +11,10 @@ public class InvoiceResponse
     public int InvoiceNumber { get; set; }
     public DateOnly CreatedDate { get; set; }
     public DateOnly DueDate { get; set; }
-    public SellerResponse? Seller { get; set; }
-    public CustomerResponse? Customer { get; set; }
+    public Guid SellerId { get; set; }
+    public string SellerName { get; set; } = string.Empty;
+    public Guid CustomerId { get; set; }
+    public string CustomerName { get; set; } = string.Empty;
     public List<InvoiceItemResponse>? Items { get; set; }
     public string? Comments { get; set; }
     public decimal TotalPrice { get; set; }
