@@ -8,6 +8,7 @@ public interface IUserClient
 {
     Task<UserLoginResponse> Login(UserLoginRequest user);
     Task<UserListResponse> Get();
+    Task<UserListResponse> Get(UserGetRequest request);
     Task<UserResponse> Get(Guid id);
     Task<AddResponse> Add(UserAddRequest user);
     Task Update(UserUpdateRequest user);
