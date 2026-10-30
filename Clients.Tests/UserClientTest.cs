@@ -1,4 +1,5 @@
 ﻿using BillerContracts.Clients.Clients;
+using BillerContracts.Enums;
 using BillerContracts.Requests.User;
 using FluentAssertions;
 using static Clients.Tests.ClientTestHelper;
@@ -56,6 +57,16 @@ public class UserClientTest
 
         //Assert
         _handler.ShouldHaveSent(HttpMethod.Get, UserUrl);
+    }
+
+    [Fact]
+    public async Task Get_GivenRequest_SendsFieldsAsQuery()
+    {
+        //Act
+        await _client.Get(new UserGetRequest { Page = 2, PageSize = PageSize.p50 });
+
+        //Assert
+        _handler.ShouldHaveSent(HttpMethod.Get, $"{UserUrl}?Page=2&PageSize=p50");
     }
 
     [Fact]

@@ -29,6 +29,11 @@ public class UserClient : IUserClient
         return await _httpClient.GetAsync<UserListResponse>(string.Empty);
     }
 
+    public async Task<UserListResponse> Get(UserGetRequest request)
+    {
+        return await _httpClient.GetAsync<UserListResponse>(string.Empty, BaseHttpClient.GenerateQueryFromData(request));
+    }
+
     public async Task<UserResponse> Get(Guid id)
     {
         return await _httpClient.GetAsync<UserResponse>($"{id}");
