@@ -1,9 +1,3 @@
-﻿using BillerContracts.Enums;
+﻿namespace BillerContracts.Requests.User;
 
-namespace BillerContracts.Requests.User;
-
-public record UserGetRequest
-{
-    public int Page { get; set; } = 1;
-    public PageSize PageSize { get; set; } = PageSize.p25;
-}
+public record UserGetRequest : PagedRequest;

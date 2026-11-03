@@ -19,7 +19,8 @@ A change reaches them only after a publish and a version bump in each repo.
 
 ## Conventions
 - The namespace is `BillerContracts.` plus the folder path (`Requests/User/` → `BillerContracts.Requests.User`).
-- Records use `{ get; set; }` with `= string.Empty` / `= []` defaults. List responses carry the list plus `TotalCount`, `Page` and `PageSize`.
+- Records use `{ get; set; }` with `= string.Empty` / `= []` defaults. List queries inherit `Requests/PagedRequest` (`Page`, `PageSize`) and add their filters; list
+  responses inherit `Responses/PagedResponse` (`TotalCount`, `Page`, `PageSize`) and add their list.
 - Biller stores enums as numbers, and clients send them in query strings by name (`PageSize=p25`).
   Add new values at the end. Never change a number or rename a member.
 - A new Biller endpoint needs a method on its client and interface, and a client test.
