@@ -1,7 +1,7 @@
 ﻿using BillerContracts.Clients.Clients;
 using BillerContracts.Enums;
 using BillerContracts.Requests.Customer;
-using FluentAssertions;
+using AwesomeAssertions;
 using static Clients.Tests.ClientTestHelper;
 
 namespace Clients.Tests;

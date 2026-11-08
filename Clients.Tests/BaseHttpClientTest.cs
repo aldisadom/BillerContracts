@@ -2,7 +2,7 @@
 using BillerContracts.Clients;
 using BillerContracts.Enums;
 using BillerContracts.Responses;
-using FluentAssertions;
+using AwesomeAssertions;
 using Newtonsoft.Json;
 using System.Net;
 using System.Net.Http.Headers;

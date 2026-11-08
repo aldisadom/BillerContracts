@@ -1,5 +1,5 @@
 using BillerContracts;
-using FluentAssertions;
+using AwesomeAssertions;
 using System.Net;
 
 namespace Clients.Tests;
