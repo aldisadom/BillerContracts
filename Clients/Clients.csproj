@@ -15,10 +15,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Lowest versions this library needs, the newest 8.0.x patches: a higher floor forces every
+         consumer onto it (NU1605). Consumers pick newer versions themselves. Clients.Tests pins each
+         of these floors, so raising one fails the build. -->
     <PackageReference Include="Microsoft.Extensions.Http" Version="8.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="8.0.0" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="8.0.2" />
-    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
   </ItemGroup>
 
   <ItemGroup>

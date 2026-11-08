@@ -1,5 +1,5 @@
 ﻿using BillerContracts.Clients;
-using FluentAssertions;
+using AwesomeAssertions;
 using Microsoft.Extensions.Options;
 using Newtonsoft.Json.Linq;
 

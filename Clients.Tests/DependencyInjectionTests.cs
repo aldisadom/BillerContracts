@@ -1,8 +1,8 @@
 ﻿using BillerContracts.Clients;
 using BillerContracts.Clients.Clients;
 using BillerContracts.Clients.Interfaces;
-using FluentAssertions;
-using FluentAssertions.Execution;
+using AwesomeAssertions;
+using AwesomeAssertions.Execution;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;

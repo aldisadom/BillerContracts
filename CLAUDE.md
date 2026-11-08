@@ -8,7 +8,7 @@ two packages that always share one version.
 - `Clients` → package `BillerContracts.Clients`: one client per resource (`Clients/<X>Client.cs` and
   `Interfaces/I<X>Client.cs`) on top of `BaseHttpClient`, registered in `DependencyInjection.cs`,
   with URLs from `ClientsOptions`.
-- `Clients.Tests`: xUnit v2 and FluentAssertions. `FakeHttpMessageHandler` checks the method, URL and body each client sends.
+- `Clients.Tests`: xUnit v3, AwesomeAssertions and Moq. `FakeHttpMessageHandler` checks the method, URL and body each client sends.
 
 ## Who uses it
 - Biller: `BillerContracts` in `src/Domain/Domain.csproj`.
@@ -32,6 +32,23 @@ A change reaches them only after a publish and a version bump in each repo.
   name, else on up-to-date master:
   `bash ../Biller/.claude/skills/_sync-repos/scripts/sync-repos.sh --branch "$(git branch --show-current)" Biller BillerFrontEnd BillioIntegrationTest`
   (add `--sync` to switch and fast-forward).
+
+## Package limits
+Every Biller repo has these limits. Keep them when updating packages.
+- Target `net8.0`. A package whose newest version needs a newer .NET stays on the last version that
+  supports `net8.0`. Moving .NET is its own task.
+- QuestPDF: Community licence only (`LicenseType.Community`). Before an update, check that the
+  business still qualifies (under USD 1M revenue, not public sector or publicly traded) and read the
+  new version's licence.
+- Assertions: AwesomeAssertions (Apache 2.0). Don't add FluentAssertions back: v8+ needs a paid
+  licence for commercial use.
+- Moq: below 4.20.0, pinned as `[4.18.4,4.20.0)` (4.20.0 added SponsorLink build-time telemetry).
+- Before taking a new major version, read its release notes and check its licence.
+- This repo only: the published `Clients` package keeps its Microsoft.Extensions references at the
+  lowest version it needs (8.0.x), not the newest. A higher floor forces every consumer onto it
+  (NU1605 when a consumer pins 8.x). `Clients.Tests` pins each floor (Configuration 8.0.0 for Http,
+  Options 8.0.2, Options.ConfigurationExtensions 8.0.0), so raising one fails the build. A new
+  reference in `Clients` gets its own pin there.
 
 ## Publishing (the owner's action)
 Run the `Publish` workflow (GitHub Actions, input `package_version` as `MAJOR.MINOR.PATCH`). It runs
