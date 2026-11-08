@@ -44,6 +44,11 @@ Every Biller repo has these limits. Keep them when updating packages.
   licence for commercial use.
 - Moq: below 4.20.0, pinned as `[4.18.4,4.20.0)` (4.20.0 added SponsorLink build-time telemetry).
 - Before taking a new major version, read its release notes and check its licence.
+- This repo only: the published `Clients` package keeps its Microsoft.Extensions references at the
+  lowest version it needs (8.0.x), not the newest. A higher floor forces every consumer onto it
+  (NU1605 when a consumer pins 8.x). `Clients.Tests` pins each floor (Configuration 8.0.0 for Http,
+  Options 8.0.2, Options.ConfigurationExtensions 8.0.0), so raising one fails the build. A new
+  reference in `Clients` gets its own pin there.
 
 ## Publishing (the owner's action)
 Run the `Publish` workflow (GitHub Actions, input `package_version` as `MAJOR.MINOR.PATCH`). It runs
