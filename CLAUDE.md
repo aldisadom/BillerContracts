@@ -26,6 +26,7 @@ A change reaches them only after a publish and a version bump in each repo.
   Add new values at the end. Never change a number or rename a member.
 - A new Biller endpoint needs a method on its client and interface, and a client test.
 - Renaming or removing a property, enum member or namespace breaks consumers: bump the major version.
+  So does dropping or raising a target framework (`net8.0` → `net10.0` made 5.0.0).
 - No AutoMapper or any other mapping library, in any Biller repo. Map with hand-written extension methods.
 - Plans for work only in this repo go in `docs/plans/BIL-<n>-<slug>.md` here. Plans that change
   several repos live in Biller's `docs/plans/`.
@@ -37,13 +38,15 @@ A change reaches them only after a publish and a version bump in each repo.
 ## Package limits
 Every Biller repo has these limits. Keep them when updating packages.
 - Target `net10.0`. A package whose newest version needs a newer .NET stays on the last version that
-  supports `net10.0`. Moving .NET is its own task.
+  supports `net10.0`, until all four repos move .NET together.
 - QuestPDF: Community licence only (`LicenseType.Community`). Before an update, check that the
   business still qualifies (under USD 1M revenue, not public sector or publicly traded) and read the
   new version's licence.
 - Assertions: AwesomeAssertions (Apache 2.0). Don't add FluentAssertions back: v8+ needs a paid
   licence for commercial use.
 - Moq: below 4.20.0, pinned as `[4.18.4,4.20.0)` (4.20.0 added SponsorLink build-time telemetry).
+- xUnit: `xunit.v3.mtp-off`, not `xunit.v3`. The .NET 10 SDK's `dotnet test` doesn't run xUnit's
+  default Microsoft.Testing.Platform runner through VSTest, and the test scripts rely on VSTest.
 - Before taking a new major version, read its release notes and check its licence.
 - This repo only: the published `Clients` package keeps its Microsoft.Extensions references at the
   lowest version it needs (8.0.x), not the newest. A higher floor forces every consumer onto it
