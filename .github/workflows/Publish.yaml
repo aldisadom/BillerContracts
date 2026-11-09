@@ -10,7 +10,7 @@ on:
         default: '1.0.0'
 
 env:
-  DOTNET_VERSION: 8.0.x
+  DOTNET_VERSION: 10.0.x
 
 jobs:
   ci:
@@ -25,9 +25,9 @@ jobs:
       contents: read
       id-token: write  # required for NuGet Trusted Publishing (OIDC)
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
 
-      - uses: actions/setup-dotnet@v2
+      - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 

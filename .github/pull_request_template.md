@@ -3,7 +3,7 @@ Jira: BIL-
 ## What and why
 
 ## Breaking?
-<!-- Renamed or removed property, enum member or namespace? Changed enum number? Then it's breaking: bump the major version. -->
+<!-- Renamed or removed property, enum member or namespace? Changed enum number? Dropped or raised a target framework? Then it's breaking: bump the major version. -->
 
 ## Testing
 <!-- Commands run and their result, e.g. the "Passed! - Failed: 0, ..." line. -->
