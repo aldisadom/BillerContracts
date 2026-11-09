@@ -8,7 +8,8 @@ two packages that always share one version.
 - `Clients` → package `BillerContracts.Clients`: one client per resource (`Clients/<X>Client.cs` and
   `Interfaces/I<X>Client.cs`) on top of `BaseHttpClient`, registered in `DependencyInjection.cs`,
   with URLs from `ClientsOptions`.
-- `Clients.Tests`: xUnit v3, AwesomeAssertions and Moq. `FakeHttpMessageHandler` checks the method, URL and body each client sends.
+- `Clients.Tests`: xUnit v3 (`xunit.v3.mtp-off`, so `dotnet test` stays on VSTest under the .NET 10
+  SDK), AwesomeAssertions and Moq. `FakeHttpMessageHandler` checks the method, URL and body each client sends.
 
 ## Who uses it
 - Biller: `BillerContracts` in `src/Domain/Domain.csproj`.
@@ -35,8 +36,8 @@ A change reaches them only after a publish and a version bump in each repo.
 
 ## Package limits
 Every Biller repo has these limits. Keep them when updating packages.
-- Target `net8.0`. A package whose newest version needs a newer .NET stays on the last version that
-  supports `net8.0`. Moving .NET is its own task.
+- Target `net10.0`. A package whose newest version needs a newer .NET stays on the last version that
+  supports `net10.0`. Moving .NET is its own task.
 - QuestPDF: Community licence only (`LicenseType.Community`). Before an update, check that the
   business still qualifies (under USD 1M revenue, not public sector or publicly traded) and read the
   new version's licence.
