@@ -71,3 +71,5 @@ minus 1. Never lower a minimum. Build and measure in Release only, as CI does: D
 2. Run `/code-review` on the branch and tell it to follow `REVIEW.md`. Fix Important findings,
    answer the rest, at most 3 rounds.
 3. Fill `.github/pull_request_template.md`, including whether the change is breaking.
+4. After the PR's CI run, compare its coverage gate line with the minimums + 1 ("Coverage") and
+   add tests or raise the minimums in the same PR.
