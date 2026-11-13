@@ -9,8 +9,9 @@ Failure here looks like:
 - A response gets a field that must never leave Biller (password, hash, salt).
 - A mapping library (AutoMapper or similar) is added.
 - A client test passes whatever the client sends (no `ShouldHaveSent`, or the expected URL built from the client's own code).
+- `COVERAGE_MIN_LINE` or `COVERAGE_MIN_BRANCH` in `.github/workflows/CI.yaml` is lowered (coverage never goes down, see `CLAUDE.md`).
 
-Skip: `bin/`, `obj/`.
+Skip: `bin/`, `obj/`, `coveragereport/`, `TestResults/`.
 
 Tag each finding **Important**, **Nit**, or **Pre-existing** (the bug was there before this change). At most 2 Nits. No naming or formatting comments.
 

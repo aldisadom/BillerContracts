@@ -59,6 +59,13 @@ Run the `Publish` workflow (GitHub Actions, input `package_version` as `MAJOR.MI
 CI first. From master it publishes that version. From another branch it publishes
 `<version>-preview.<run>`, so consumers can try a change before it is merged.
 
+## Coverage
+CI reports unit-test coverage in the job summary and fails below `COVERAGE_MIN_LINE` /
+`COVERAGE_MIN_BRANCH` in `.github/workflows/CI.yaml`, which are master's coverage minus 1 point.
+Coverage never goes down. After each PR's CI run, compare its numbers with the minimums + 1: lower
+means add tests in the same PR; higher means raise the minimums in the same PR to the new numbers
+minus 1. Never lower a minimum. Build and measure in Release only, as CI does: Debug gives other numbers.
+
 ## Before a PR
 1. `dotnet build -c Release` and `dotnet test -c Release`. Paste the `Passed!/Failed!` line.
 2. Run `/code-review` on the branch and tell it to follow `REVIEW.md`. Fix Important findings,
