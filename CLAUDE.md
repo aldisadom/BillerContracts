@@ -57,7 +57,9 @@ Every Biller repo has these limits. Keep them when updating packages.
 ## Publishing (the owner's action)
 Run the `Publish` workflow (GitHub Actions, input `package_version` as `MAJOR.MINOR.PATCH`). It runs
 CI first. From master it publishes that version. From another branch it publishes
-`<version>-preview.<run>`, so consumers can try a change before it is merged.
+`<version>-preview.<run>`, so consumers can try a change before it is merged. The version has no
+default, and a run fails before pushing anything when either package already has that version on
+nuget.org.
 
 ## Before a PR
 1. `dotnet build -c Release` and `dotnet test -c Release`. Paste the `Passed!/Failed!` line.

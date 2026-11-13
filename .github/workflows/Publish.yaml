@@ -5,9 +5,8 @@ on:
   workflow_dispatch:
     inputs:
       package_version:
-        description: 'Package version to publish (e.g. 1.2.3). Runs from branches other than master publish 1.2.3-preview.<run number>'
+        description: 'Package version to publish (e.g. 1.2.3), one that is not on nuget.org yet. Runs from branches other than master publish 1.2.3-preview.<run number>'
         required: true
-        default: '1.0.0'
 
 env:
   DOTNET_VERSION: 10.0.x
@@ -55,6 +54,28 @@ jobs:
       - name: List artifacts
         run: ls -la ./artifacts || true
 
+      # Before anything is pushed, so a taken version publishes neither package
+      - name: Fail if the version is already on NuGet.org
+        env:
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          for package in ./artifacts/*.nupkg; do
+            id="$(basename "$package" ".$VERSION.nupkg")"
+            url="https://api.nuget.org/v3-flatcontainer/${id,,}/index.json"
+            code="$(curl -s -o versions.json -w '%{http_code}' "$url")"
+            # 404: the package has never been published
+            [ "$code" = 404 ] && continue
+            if [ "$code" != 200 ]; then
+              echo "::error::Could not check $url (HTTP $code)"
+              exit 1
+            fi
+            # The list holds lowercase versions in quotes: {"versions":["5.0.0","5.1.0-preview.3"]}
+            if grep -qF "\"${VERSION,,}\"" versions.json; then
+              echo "::error::$id $VERSION is already on nuget.org. Run Publish again with a newer package_version"
+              exit 1
+            fi
+          done
+
       # Exchange the GitHub OIDC token for a short-lived (1h) NuGet API key
       - name: NuGet login
         uses: NuGet/login@v1
@@ -66,4 +87,4 @@ jobs:
         env:
           NUGET_API_KEY: ${{ steps.login.outputs.NUGET_API_KEY }}
         run: |
-          dotnet nuget push "./artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json" --skip-duplicate
+          dotnet nuget push "./artifacts/*.nupkg" --api-key "$NUGET_API_KEY" --source "https://api.nuget.org/v3/index.json"
