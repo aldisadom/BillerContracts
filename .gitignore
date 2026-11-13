@@ -361,3 +361,6 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+
+# ReportGenerator output of the CI coverage commands, run locally
+/coveragereport

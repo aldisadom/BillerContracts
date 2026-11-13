@@ -63,8 +63,17 @@ the same commit, so a run that failed halfway can run again ("Re-run failed jobs
 that commit). It fails when a package has the version from another commit, when every package
 already has it, or when a branch run asks for a preview of a version that is already released.
 
+## Coverage
+CI reports unit-test coverage in the job summary and fails below `COVERAGE_MIN_LINE` /
+`COVERAGE_MIN_BRANCH` in `.github/workflows/CI.yaml`, which are master's coverage minus 1 point.
+Coverage never goes down. After each PR's CI run, compare its numbers with the minimums + 1: lower
+means add tests in the same PR; higher means raise the minimums in the same PR to the new numbers
+minus 1. Never lower a minimum. Build and measure in Release only, as CI does: Debug gives other numbers.
+
 ## Before a PR
 1. `dotnet build -c Release` and `dotnet test -c Release`. Paste the `Passed!/Failed!` line.
 2. Run `/code-review` on the branch and tell it to follow `REVIEW.md`. Fix Important findings,
    answer the rest, at most 3 rounds.
 3. Fill `.github/pull_request_template.md`, including whether the change is breaking.
+4. Once the PR is open and its CI has run: compare the coverage gate line with the minimums + 1
+   ("Coverage"), and add tests or raise the minimums in the same PR before it is merged.
