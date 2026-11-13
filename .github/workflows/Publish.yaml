@@ -54,15 +54,26 @@ jobs:
       - name: List artifacts
         run: ls -la ./artifacts || true
 
-      # Before anything is pushed, so a taken version publishes neither package
-      - name: Fail if the version is already on NuGet.org
+      # Before anything is pushed. A package that nuget.org already has at this version from this
+      # commit is left out, so a run that failed halfway (Contracts pushed, Clients not) can run
+      # again. From another commit, or when every package has it, the run fails instead of
+      # publishing a mismatched pair or finishing green without publishing anything.
+      - name: Leave out packages already on NuGet.org
         env:
           VERSION: ${{ steps.version.outputs.version }}
+          BASE_VERSION: ${{ github.event.inputs.package_version }}
         run: |
-          for package in ./artifacts/*.nupkg; do
+          shopt -s nullglob
+          packages=(./artifacts/*.nupkg)
+          if [ ${#packages[@]} -eq 0 ]; then
+            echo "::error::dotnet pack left no packages in ./artifacts"
+            exit 1
+          fi
+          for package in "${packages[@]}"; do
             id="$(basename "$package" ".$VERSION.nupkg")"
             url="https://api.nuget.org/v3-flatcontainer/${id,,}/index.json"
-            code="$(curl -s -o versions.json -w '%{http_code}' "$url")"
+            # || true: a network error gives code 000 and the error below, not a bare exit
+            code="$(curl -s --retry 3 -o versions.json -w '%{http_code}' "$url" || true)"
             # 404: the package has never been published
             [ "$code" = 404 ] && continue
             if [ "$code" != 200 ]; then
@@ -70,11 +81,33 @@ jobs:
               exit 1
             fi
             # The list holds lowercase versions in quotes: {"versions":["5.0.0","5.1.0-preview.3"]}
-            if grep -qF "\"${VERSION,,}\"" versions.json; then
-              echo "::error::$id $VERSION is already on nuget.org. Run Publish again with a newer package_version"
+            if [ "$VERSION" != "$BASE_VERSION" ] && grep -qF "\"$BASE_VERSION\"" versions.json; then
+              echo "::error::$id $BASE_VERSION is already released, and a preview of it would sort below it. Run Publish again with a version that isn't on nuget.org yet"
               exit 1
             fi
+            if grep -qF "\"${VERSION,,}\"" versions.json; then
+              # The published .nuspec names the commit it was built from
+              nuspec="https://api.nuget.org/v3-flatcontainer/${id,,}/${VERSION,,}/${id,,}.nuspec"
+              code="$(curl -s --retry 3 -o package.nuspec -w '%{http_code}' "$nuspec" || true)"
+              if [ "$code" != 200 ]; then
+                echo "::error::Could not check $nuspec (HTTP $code). Re-run the job"
+                exit 1
+              fi
+              commit="$(grep -o 'commit="[0-9a-f]*"' package.nuspec | head -n1 | cut -d'"' -f2 || true)"
+              if [ "$commit" != "$GITHUB_SHA" ]; then
+                echo "::error::$id $VERSION is already on nuget.org, built from commit ${commit:-unknown}. Run Publish again with a version that isn't on nuget.org yet"
+                exit 1
+              fi
+              echo "::notice::$id $VERSION is already on nuget.org from this commit, so it is left out"
+              rm "$package"
+            fi
           done
+          left=(./artifacts/*.nupkg)
+          if [ ${#left[@]} -eq 0 ]; then
+            # Only reached when every package came from this commit: the version is fully published
+            echo "::error::Every package already has $VERSION on nuget.org from this commit, so it is fully published and this run has nothing to push"
+            exit 1
+          fi
 
       # Exchange the GitHub OIDC token for a short-lived (1h) NuGet API key
       - name: NuGet login
