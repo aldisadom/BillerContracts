@@ -65,15 +65,29 @@ already has it, or when a branch run asks for a preview of a version that is alr
 
 ## Coverage
 CI reports unit-test coverage in the job summary and fails below `COVERAGE_MIN_LINE` /
-`COVERAGE_MIN_BRANCH` in `.github/workflows/CI.yaml`, which are master's coverage minus 1 point.
-Coverage never goes down. After each PR's CI run, compare its numbers with the minimums + 1: lower
-means add tests in the same PR; higher means raise the minimums in the same PR to the new numbers
-minus 1. Never lower a minimum. Build and measure in Release only, as CI does: Debug gives other numbers.
+`COVERAGE_MIN_BRANCH` in `.github/workflows/CI.yaml`, which are master's coverage minus 1 point,
+rounded down to one decimal. Coverage never goes down.
+
+Measure it in Release, as CI does (Debug gives other numbers), from empty result folders: ReportGenerator
+merges every run it finds, so old runs would count.
+
+```bash
+rm -rf TestResults coveragereport
+dotnet test -c Release --collect "XPlat Code Coverage" --results-directory TestResults
+reportgenerator -reports:"TestResults/*/coverage.cobertura.xml" -targetdir:coveragereport -reporttypes:TextSummary
+grep -E "Line coverage|Branch coverage" coveragereport/Summary.txt
+```
+
+Before opening a PR, after the last code change, compare the numbers with the minimums + 1: lower means
+add tests; higher means raise the minimums in the branch to the new numbers minus 1, so the PR carries
+them. If the PR's CI gate line shows other numbers, set the minimums this branch raised from CI's
+numbers instead. Never go below master's minimums.
 
 ## Before a PR
-1. `dotnet build -c Release` and `dotnet test -c Release`. Paste the `Passed!/Failed!` line.
+1. `dotnet build -c Release`, then the coverage commands in "Coverage", which run the tests. Paste the
+   `Passed!/Failed!` line and the line and branch numbers.
 2. Run `/code-review` on the branch and tell it to follow `REVIEW.md`. Fix Important findings,
    answer the rest, at most 3 rounds.
-3. Fill `.github/pull_request_template.md`, including whether the change is breaking.
-4. Once the PR is open and its CI has run: compare the coverage gate line with the minimums + 1
-   ("Coverage"), and add tests or raise the minimums in the same PR before it is merged.
+3. Once the code is final, compare the coverage with the minimums + 1 ("Coverage"), measuring again
+   if a review fix changed code: add tests, or raise the minimums in the branch.
+4. Fill `.github/pull_request_template.md`, including whether the change is breaking.
