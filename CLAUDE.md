@@ -13,7 +13,7 @@ two packages that always share one version.
 
 ## Who uses it
 - Biller: `BillerContracts` in `src/Domain/Domain.csproj`.
-- BillioIntegrationTest: `BillerContracts` in `src/IntegrationTests/IntegrationTests.csproj`.
+- BillioIntegrationTest: `BillerContracts.Clients` in `src/IntegrationTests/IntegrationTests.csproj`.
 - BillerFrontEnd: `BillerContracts.Clients` in `src/FrontEnd/FrontEnd.csproj`.
 
 A change reaches them only after a publish and a version bump in each repo.
@@ -28,6 +28,9 @@ A change reaches them only after a publish and a version bump in each repo.
 - Renaming or removing a property, enum member or namespace breaks consumers: bump the major version.
   So does dropping or raising a target framework (`net8.0` → `net10.0` made 5.0.0).
 - No AutoMapper or any other mapping library, in any Biller repo. Map with hand-written extension methods.
+- Update `README.md` in the same change when the change makes it wrong: a new or changed command,
+  setting, port, endpoint group, package, or project layout. And `docs/README_lt.md`, its Lithuanian
+  translation, with it.
 - Plans for work only in this repo go in `docs/plans/BIL-<n>-<slug>.md` here. Plans that change
   several repos live in Biller's `docs/plans/`.
 - Before reading, comparing or using another Biller repo, put it on the branch with this branch's
@@ -86,8 +89,11 @@ numbers instead. Never go below master's minimums.
 ## Before a PR
 1. `dotnet build -c Release`, then the coverage commands in "Coverage", which run the tests. Paste the
    `Passed!/Failed!` line and the line and branch numbers.
-2. Run `/code-review` on the branch and tell it to follow `REVIEW.md`. Fix Important findings,
+2. Check `README.md` and `docs/README_lt.md` against the diff, and update both when the change makes them wrong.
+3. Run `/code-review high` on the branch on Opus at high effort (when the session runs another model
+   or a lower effort, start a general-purpose agent with `model: opus` and `effort: high` that runs
+   it), and tell it to follow `REVIEW.md`. Fix Important findings,
    answer the rest, at most 3 rounds.
-3. Once the code is final, compare the coverage with the minimums + 1 ("Coverage"), measuring again
+4. Once the code is final, compare the coverage with the minimums + 1 ("Coverage"), measuring again
    if a review fix changed code: add tests, or raise the minimums in the branch.
-4. Fill `.github/pull_request_template.md`, including whether the change is breaking.
+5. Fill `.github/pull_request_template.md`, including whether the change is breaking.

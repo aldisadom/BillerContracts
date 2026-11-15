@@ -10,6 +10,7 @@ Failure here looks like:
 - A mapping library (AutoMapper or similar) is added.
 - A client test passes whatever the client sends (no `ShouldHaveSent`, or the expected URL built from the client's own code).
 - `COVERAGE_MIN_LINE` or `COVERAGE_MIN_BRANCH` in `.github/workflows/CI.yaml` is lowered (coverage never goes down, see `CLAUDE.md`).
+- A change makes `README.md` wrong and doesn't update it, or updates it without `docs/README_lt.md`.
 
 Skip: `bin/`, `obj/`, `coveragereport/`, `TestResults/`.
 
