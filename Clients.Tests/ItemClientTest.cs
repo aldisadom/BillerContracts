@@ -85,9 +85,10 @@ public class ItemClientTest
         //Arrange
         var expected = new ItemVersionListResponse
         {
-            Versions = [new ItemVersionResponse { ItemId = Id, Version = 2, Name = "Iron throne", Price = 60m, ChangedDate = new DateTime(2026, 11, 10, 14, 30, 0, DateTimeKind.Utc) }]
+            ItemId = Id,
+            Versions = [new ItemVersionResponse { Version = 2, Name = "Iron throne", Price = 60m, ChangedDate = new DateTime(2026, 11, 10, 14, 30, 0, DateTimeKind.Utc) }]
         };
-        _handler.ResponseBody = $"{{\"versions\":[{{\"itemId\":\"{Id}\",\"version\":2,\"name\":\"Iron throne\",\"price\":60,\"changedDate\":\"2026-11-10T14:30:00Z\"}}]}}";
+        _handler.ResponseBody = $"{{\"itemId\":\"{Id}\",\"versions\":[{{\"version\":2,\"name\":\"Iron throne\",\"price\":60,\"changedDate\":\"2026-11-10T14:30:00Z\"}}]}}";
 
         //Act
         ItemVersionListResponse result = await _client.GetVersions(Id);
