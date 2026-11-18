@@ -60,6 +60,16 @@ public class ItemClientTest
     }
 
     [Fact]
+    public async Task Get_GivenIdAndVersion_SendsVersionAsQuery()
+    {
+        //Act
+        await _client.Get(Id, 2);
+
+        //Assert
+        _handler.ShouldHaveSent(HttpMethod.Get, $"{ItemResource}/{Id}?Version=2");
+    }
+
+    [Fact]
     public async Task GetVersions_GivenId_GetsVersionsUrl()
     {
         //Act

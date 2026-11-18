@@ -15,7 +15,7 @@ env:
   # Master's coverage minus 1 point, rounded down to one decimal. A branch that raises coverage raises
   # them before its PR is opened, and sets them from the PR's CI gate line if that differs; never below
   # master's (CLAUDE.md, "Coverage").
-  COVERAGE_MIN_LINE: 85.5
+  COVERAGE_MIN_LINE: 85.6
   COVERAGE_MIN_BRANCH: 71.7
 
 jobs:

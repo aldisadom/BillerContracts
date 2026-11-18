@@ -11,6 +11,7 @@ public interface IItemClient
     Task<ItemListResponse> Get();
     Task<ItemListResponse> Get(ItemGetRequest request);
     Task<ItemResponse> Get(Guid id);
+    Task<ItemResponse> Get(Guid id, int version);
     Task<ItemVersionListResponse> GetVersions(Guid id);
     Task Update(ItemUpdateRequest item);
 }
