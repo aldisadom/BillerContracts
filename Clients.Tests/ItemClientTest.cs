@@ -59,6 +59,16 @@ public class ItemClientTest
     }
 
     [Fact]
+    public async Task GetVersions_GivenId_GetsVersionsUrl()
+    {
+        //Act
+        await _client.GetVersions(Id);
+
+        //Assert
+        _handler.ShouldHaveSent(HttpMethod.Get, $"{ItemResource}/{Id}/versions");
+    }
+
+    [Fact]
     public async Task Add_GivenRequest_PostsJson()
     {
         //Act

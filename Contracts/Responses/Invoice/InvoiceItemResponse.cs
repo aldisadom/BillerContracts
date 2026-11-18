@@ -7,4 +7,5 @@ public class InvoiceItemResponse
     public decimal Price { get; set; }
     public decimal Quantity { get; set; }
     public string? Comments { get; set; }
+    public int? Version { get; set; }
 }
