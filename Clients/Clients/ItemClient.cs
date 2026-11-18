@@ -34,6 +34,16 @@ public class ItemClient : IItemClient
         return await _httpClient.GetAsync<ItemResponse>($"{id}");
     }
 
+    public async Task<ItemResponse> Get(Guid id, int version)
+    {
+        return await _httpClient.GetAsync<ItemResponse>($"{id}", new Dictionary<string, string> { ["Version"] = $"{version}" });
+    }
+
+    public async Task<ItemVersionListResponse> GetVersions(Guid id)
+    {
+        return await _httpClient.GetAsync<ItemVersionListResponse>($"{id}/versions");
+    }
+
     public async Task<AddResponse> Add(ItemAddRequest item)
     {
         return await _httpClient.PostAsync<ItemAddRequest, AddResponse>(string.Empty, item);

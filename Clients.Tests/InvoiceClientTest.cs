@@ -1,7 +1,9 @@
 ﻿using BillerContracts.Clients.Clients;
 using BillerContracts.Enums;
 using BillerContracts.Requests.Invoice;
+using BillerContracts.Responses.Invoice;
 using AwesomeAssertions;
+using Newtonsoft.Json.Linq;
 using static Clients.Tests.ClientTestHelper;
 
 namespace Clients.Tests;
@@ -59,6 +61,20 @@ public class InvoiceClientTest
     }
 
     [Fact]
+    public async Task Get_GivenLineWithVersion_ReturnsLineVersion()
+    {
+        //Arrange
+        var expected = new InvoiceItemResponse { Id = Id, Name = "Iron throne", Price = 50m, Quantity = 2m, Comments = "c", Version = 3 };
+        _handler.ResponseBody = $"{{\"items\":[{{\"id\":\"{Id}\",\"name\":\"Iron throne\",\"price\":50,\"quantity\":2,\"comments\":\"c\",\"version\":3}}]}}";
+
+        //Act
+        InvoiceResponse result = await _client.Get(Id);
+
+        //Assert
+        result.Items.Should().ContainSingle().Which.Should().BeEquivalentTo(expected);
+    }
+
+    [Fact]
     public async Task Add_GivenRequest_PostsJson()
     {
         //Act
@@ -76,6 +92,16 @@ public class InvoiceClientTest
 
         //Assert
         _handler.ShouldHaveSent(HttpMethod.Put, InvoiceUrl, "{}");
+    }
+
+    [Fact]
+    public async Task Update_GivenLineWithVersion_SendsLineVersion()
+    {
+        //Act
+        await _client.Update(new InvoiceUpdateRequest { Items = [new InvoiceItemRequest { Id = Id, Quantity = 2m, Version = 3 }] });
+
+        //Assert
+        JToken.Parse(_handler.LastBody!)["Items"]![0]!["Version"]!.Value<int>().Should().Be(3);
     }
 
     [Fact]
